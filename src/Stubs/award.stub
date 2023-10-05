@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Awards;
+
+use EduLazaro\Larawards\Concerns\IsAward;
+use EduLazaro\Larawards\Concerns\HasRewards;
+use EduLazaro\Larawards\Contracts\AwardInterface;
+
+class {{award_class}} implements AwardInterface
+{
+    use IsAward;
+
+    /** @var string The award internal name. */
+    public string $id = '{{id}}';
+
+    /** An event to trigger when the award is rewarded. */
+    // protected string $event = AnEvent::class;
+
+    /** @var protected The award tiers. */
+    protected array $tiers = [
+        'starter' => [
+            'score' => 0,
+            'title' => 'Welcome!',
+        ],
+        'intermediate' => [
+            'score' => 2,
+            'title' => 'Welcome Again!',
+        ],
+    ];
+
+    /**
+     * Returns the score for the award
+     *
+     * @param $rewardable;
+     * @return int
+     */
+    public function score($rewardable = null): int
+    {
+        if ($awardable == null && $this->hasRewards) {
+            $awardable = $this->hasRewards;
+        }
+
+        return 1;
+    }
+}
