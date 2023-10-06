@@ -3,6 +3,7 @@
 namespace EduLazaro\Larawards\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use EduLazaro\Larawards\Database\Factories\RewardFactory;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -30,6 +31,12 @@ class Reward extends Model
         'title',
         'next_tier_score'
     ];
+
+
+    protected static function newFactory(): RewardFactory
+    {
+        return RewardFactory::new();
+    }
 
     public function getAwardAttribute()
     {

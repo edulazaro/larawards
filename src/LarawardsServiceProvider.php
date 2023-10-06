@@ -15,7 +15,7 @@ class LarawardsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__. '/../database/migrations');
-
+        
         if ($this->app->runningInConsole()) {
             $this->commands([MakeAwardCommand::class]);
         }

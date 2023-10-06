@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace EduLazaro\Larawards\Database\Factories;
 
 use App\Models\User;
 use EduLazaro\Larawards\Models\Reward;
