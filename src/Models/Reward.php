@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model;
 
-use EduLazaro\Larawards\Support\Collections\Awards;
+use EduLazaro\Larawards\Collections\Awards;
 
 class Reward extends Model
 {
@@ -32,7 +32,9 @@ class Reward extends Model
         'next_tier_score'
     ];
 
-
+    /**
+     * @return RewardFactory
+     */
     protected static function newFactory(): RewardFactory
     {
         return RewardFactory::new();
@@ -47,22 +49,34 @@ class Reward extends Model
         return $className::scope($this->awardable);
     }
 
-    public function getTierAttribute()
+    /**
+     * @return array
+     */
+    public function getTierAttribute(): array
     {
         return $this->award->tiers()->get($this->name);
     }
 
-    public function getNextTierAttribute()
+    /**
+     * @return array
+     */
+    public function getNextTierAttribute(): array
     {
         return $this->award->tiers()->where('score', '>', $this->tier['score'])->first();
     }
 
-    public function getTitleAttribute()
+    /**
+     * @return string
+     */
+    public function getTitleAttribute(): string
     {
         return $this->tier['title'];
     }
 
-    public function getNextTierScoreAttribute()
+    /**
+     * @return int
+     */
+    public function getNextTierScoreAttribute(): int
     {
         if (!$this->nextTier) return null;
 
@@ -72,9 +86,9 @@ class Reward extends Model
     }
 
     /**
-     * Get the parent commentable model (post or video).
+     * Get the parent rewardable model
      */
-    public function awardable(): MorphTo
+    public function rewardable(): MorphTo
     {
         return $this->morphTo();
     }

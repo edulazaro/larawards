@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 use EduLazaro\Larawards\Models\Reward;
 use EduLazaro\Larawards\Contracts\AwardInterface;
-use EduLazaro\Larawards\Support\Collections\Awards;
+use EduLazaro\Larawards\Collections\Awards;
 
 /**
  * Applicable to models which can be awarded
@@ -74,7 +74,7 @@ trait HasRewards
      */
     public function rewards(): MorphMany
     {
-        return $this->morphMany(Reward::class, 'awardable');
+        return $this->morphMany(Reward::class, 'rewardable');
     }
 
     /**

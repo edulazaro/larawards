@@ -1,12 +1,12 @@
 <?php
 
-namespace EduLazaro\Larawards\Support\Collections;
+namespace EduLazaro\Larawards\Collections;
 
 use ArrayIterator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
-use EduLazaro\Larawards\Concerns\Awardable;
+use EduLazaro\Larawards\Concerns\HasRewards;
 use Illuminate\Support\Traits\EnumeratesValues;
 
 /**
@@ -39,14 +39,14 @@ class Awards extends Collection
     /**
      * Awards not actually awarede to the user
      *
-     * @param Awardable $awardable
+     * @param HasRewards $rewardable
      * @return static
      */
-    public function scope($awardable): static
+    public function scope($rewardable): static
     {
         $scopedItems = [];
         foreach ($this->items as $key => $award) {
-            $scopedItems[$key] = $award::scope($awardable);
+            $scopedItems[$key] = $award::scope($rewardable);
         }
 
         return new static($scopedItems);
@@ -105,7 +105,7 @@ class Awards extends Collection
     public function check()
     {
         foreach ($this->items as $award) {
-            $award->check($this->awardable);
+            $award->check($this->rewardable);
         }
     }
 }

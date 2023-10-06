@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-use EduLazaro\Larawards\Support\Collections\Awards;
+use EduLazaro\Larawards\Collections\Awards;
 use EduLazaro\Larawards\Concerns\HasRewards;
 use EduLazaro\Larawards\Contracts\AwardInterface;
 
@@ -19,9 +19,9 @@ trait IsAward
     /**
      * Constructor.
      */
-    public function __construct($hasRewards = null)
+    public function __construct($rewardable = null)
     {
-        $this->hasRewards = $hasRewards ? $hasRewards : null;
+        $this->rewardable = $rewardable ? $rewardable : null;
 
         $this->name = empty($this->name)
             ? strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', basename(str_replace('\\', '/', self::class))))
@@ -45,9 +45,9 @@ trait IsAward
         ]);
     }
 
-    public static function scope($hasRewards): static
+    public static function scope($rewardable): static
     {
-        return new static($hasRewards);
+        return new static($rewardable);
     }
 
 
@@ -102,37 +102,37 @@ trait IsAward
     }
 
     /**
-     * Award this award to an awardable or user.
+     * Award this award to an rewardable or user.
      * 
-     * @param $awardable
+     * @param $rewardable
      * @return void
      */
-    public function check($awardable = null): void
+    public function check($rewardable = null): void
     {
-        if ($awardable == null && $this->hasRewards) {
-            $awardable = $this->hasRewards;
+        if ($rewardable == null && $this->rewardable) {
+            $rewardable = $this->rewardable;
         }
 
-        if (empty($awardable )) return;
+        if (empty($rewardable)) return;
 
-        $awardableScore = $this->score($awardable);
+        $score = $this->score($rewardable);
 
         foreach ($this->tiers as $name => $tier) {
-            if ($awardableScore >= $tier['score']) {
-                $awardable->reward($this, $name);
+            if ($score >= $tier['score']) {
+                $rewardable->reward($this, $name);
             }
         }
     }
 
     /**
-     * Award this award to an awardable or user.
+     * Award this award to an rewardable or user.
      * 
-     * @param $awardable
+     * @param $rewardable
      * @return void
      */
     public function nextTier(): array|null
     {
-        $namesArray = $this->hasRewards->rewards()->where('award_id', $this->alias)->pluck('name')->toArray();
+        $namesArray = $this->rewardable->rewards()->where('award_id', $this->alias)->pluck('name')->toArray();
 
         foreach ($this->tiers() as $name => $tier) {
 

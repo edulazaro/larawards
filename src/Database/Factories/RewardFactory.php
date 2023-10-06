@@ -6,7 +6,7 @@ use App\Models\User;
 use EduLazaro\Larawards\Models\Reward;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-use EduLazaro\Larawards\Support\Collections\Awards;
+use EduLazaro\Larawards\Collections\Awards;
 
 class RewardFactory extends Factory
 {
@@ -25,8 +25,8 @@ class RewardFactory extends Factory
     public function definition()
     {
         return [
-            'awardable_id' => false,
-            'awardable_type' => 'user',
+            'rewardable_id' => false,
+            'rewardable_type' => 'user',
             'award_id' => $this->faker->text(),
             'award_type' => $this->faker->text(),
             'name' => $this->faker->text(),
@@ -38,14 +38,14 @@ class RewardFactory extends Factory
         $user = User::findOrFail($id);
 
         return $this->state([
-            'awardable_id' => $user->id,
-            'awardable_type' => 'user',
+            'rewardable_id' => $user->id,
+            'rewardable_type' => 'user',
         ]);
     }
 
     public function withAward($award): Factory
     {
-        $existingTierNames = Reward::where('awardable_id', $award->hasRewards->id)
+        $existingTierNames = Reward::where('rewardable_id', $award->rewardable->id)
                         ->where('award_id', array_search($award::class, Awards::$map))
                         ->pluck('name')->toArray();
 

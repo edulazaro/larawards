@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('award_id');
             $table->string('award_type');
-            $table->morphs('awardable');
+            $table->morphs('rewardable');
             $table->string('name');
             $table->timestamps();
 
-            $table->unique(['award_id', 'awardable_type', 'awardable_id', 'name']);
+            $table->unique(['award_id', 'rewardable_type', 'rewardable_id', 'name']);
         });
     }
 
