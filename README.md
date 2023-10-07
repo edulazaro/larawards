@@ -2,16 +2,14 @@
 
 An way of implementing achievement on Laravel.
 
-## Testing
 
-The tests are configured to use an in-memory database. To execute the tests run:
+## How to install Larawards
 
-```php
-php artisan test
+Execute this command on the Laravel root project folder:
+
+```bash
+composer require edulazaro/larakeep
 ```
-
-## Start up
-
 
 Configure the database details on the `.env` file and execute the migrations using:
 

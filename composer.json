@@ -1,5 +1,6 @@
 {
     "name": "edulazaro/larawards",
+    "description": "A rewards system for Laravel, allowing to create rewards like achievements or trophies.",
     "type": "library",
     "require": {
         "php": "^8.1",
