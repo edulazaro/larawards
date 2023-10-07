@@ -28,8 +28,7 @@ interface AwardInterface
     /**
      * Get the awardable score a user
      *
-     * @param HasRewards $awardable;
      * @return int
      */
-    public function score(HasRewards $awardable): int;
+    public function score(): int;
 }

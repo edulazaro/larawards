@@ -80,7 +80,7 @@ class Reward extends Model
     {
         if (!$this->nextTier) return null;
 
-        $currentScore = $this->award->score($this->awardable);
+        $currentScore = $this->award->score();
 
         return $this->nextTier['score'] - $currentScore;
     }

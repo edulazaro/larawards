@@ -3,6 +3,9 @@
 namespace EduLazaro\Larawards;
 
 use Illuminate\Support\ServiceProvider;
+
+use EduLazaro\Larawards\Models\Reward;
+use EduLazaro\Larawards\Observers\RewardObserver;
 use EduLazaro\Larawards\Console\Commands\MakeAwardCommand;
 
 class LarawardsServiceProvider extends ServiceProvider
@@ -14,6 +17,8 @@ class LarawardsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Reward::observe(RewardObserver::class);
+
         $this->loadMigrationsFrom(__DIR__. '/../database/migrations');
         
         if ($this->app->runningInConsole()) {
@@ -29,10 +34,5 @@ class LarawardsServiceProvider extends ServiceProvider
     public function register()
     {
         //
-    }
-
-    public static function hola()
-    {
-        echo("holda");
     }
 }

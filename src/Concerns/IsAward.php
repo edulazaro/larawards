@@ -45,12 +45,13 @@ trait IsAward
         ]);
     }
 
-    public static function scope($rewardable): static
+    /**
+     * @return static
+     */
+    public static function scope($rewardable) : static
     {
         return new static($rewardable);
     }
-
-
 
     /**
      * Add a new award tier to the tiers array.
@@ -107,15 +108,12 @@ trait IsAward
      * @param $rewardable
      * @return void
      */
-    public function check($rewardable = null): void
+    public function check(): void
     {
-        if ($rewardable == null && $this->rewardable) {
-            $rewardable = $this->rewardable;
-        }
-
+        $rewardable = $this->rewardable;
         if (empty($rewardable)) return;
 
-        $score = $this->score($rewardable);
+        $score = $this->score();
 
         foreach ($this->tiers as $name => $tier) {
             if ($score >= $tier['score']) {

@@ -1,6 +1,6 @@
-# Awards Demo
+# Larawards
 
-An possible way of implementing achievement on Laravel.
+An way of implementing achievement on Laravel.
 
 ## Testing
 
@@ -73,20 +73,30 @@ Finally, the `score` method is the place to code the logic which retrieves the c
 /**
 * Get the awardable score a user
  *
-* @param $awardable;
 * @return int
 */
-public function score($awardable = null): int
+public function score(): int
 {
-    if ($awardable == null && $this->hasRewards) {
-        $awardable = $this->hasRewards;
-    }
-
-    return $awardable->comments()->count();
+    return $this->rewardable->comments()->count();
 }
 ```
 
 ## Registering awards
+
+If you ant an model to accept rewards, you will need to use the `HasWards` trait into it, like on this example:
+
+
+```php
+namespace App\Models;
+
+use EduLazaro\Larawards\Concerns\HasRewards;
+
+class User
+{
+    use HasRewards;
+
+}
+```
 
 The achievements should be registered with the User model or another model including the `HasRewards` trait using the `AwardProvider`:
 
@@ -103,8 +113,117 @@ User::awardableGroup('achievements', [
 ]);
 ```
 
+Awards can be registed to any model which uses the `HasRewards` trait.
+
+## Checking awards
+
+When you need to check an award, you can do this:
+
+```php
+FooAchievement::scope($user)->check();
+```
+
+As you can see, the award needs to be scoped first to the user This will add the reward if it matches the requirement of any tier.
+awardables.
+
+You can also perform queries to check many awards at a time. This will check all awards assigned to a user:
+
+```php
+User::awardables()->check();
+```
+
+You can also select a specific group:
+
+```php
+User::awardables()->group('top_awards')->check();
+```
+
+Or a specific type:
+
+```php
+User::awardables()->where('type', 'achievement')->check();
+```
+
+Once an award is awarded, it will be added into the `rewards` table.
+
+## Reward events
+
+If you want, you can specify an event to be fired using the `$event` attribute:
+
+```php
+namespace App\Awards;
+
+use EduLazaro\Larawards\Concerns\IsAward;
+use EduLazaro\Larawards\Contracts\AwardInterface;
+use App\Events\AchievementUnlocked;
+
+class CommentsAchievement implements AwardInterface
+{
+    use IsAward;
+
+    // ...
+
+    protected string $event = AchievementUnlocked::class;
+    // ...
+}
+```
+
+This event will be fired each time a user gets a reward.
+
+## Checking awards
+
+To get the rewards for a user you can do:
+
+```php
+$rewards = $user->rewards;
+```
+
+To check if a specific award and tier has been rewarded:
+
+```php
+$isRewarded = $user->rewards()->where('name', 'comment_written')->exists();
+```
+
+You can query the rewards for many users:
+
+```php
+use EduLazaro\Larawards\Models\Reward;
+
+// ...
+Reward::where('award_id', 'comments_achievement')->get();
+```
+## Awards morph map
+
+This works in the same way as the standard [Laravel morph maps](https://laravel.com/docs/10.x/eloquent-relationships#custom-polymorphic-types).
+
+When a reward is inserte dinto the database, the award id will be the class where the award is defined. However this looks ugly. To fix it, use the `Award::enforceMap` method on any service provider:
+
+```php
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use EduLazaro\Larawards\Collections\Awards;
+
+use App\Awards\CommentsAchievement;
+use App\Awards\LikesAchievement;
+
+class AwardServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        Awards::enforceMap([
+            'comments_achievement' => CommentsAchievement::class,
+            'likes_achievement' => LikesAchievement::class,
+        ]);
+    }
+}
+```
+
+This will assign the specified alias to the desided Award classes. For example, the `App\Awards\CommentsAchievement` will be represented as `comments_achievement`  which is more readable.
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-# larawards

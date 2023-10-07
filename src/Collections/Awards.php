@@ -14,8 +14,9 @@ use Illuminate\Support\Traits\EnumeratesValues;
  */
 class Awards extends Collection
 {
-    public static array $map;
-    
+   /** @var array  Stores the class map */
+   public static array $map;
+
     /**
      * @param array $awardClassMap
      * @return void
@@ -45,14 +46,38 @@ class Awards extends Collection
     public function scope($rewardable): static
     {
         $scopedItems = [];
-        foreach ($this->items as $key => $award) {
+        foreach ($this->items as $key => $award) {            
             $scopedItems[$key] = $award::scope($rewardable);
         }
 
         return new static($scopedItems);
     }
 
-    
+    /**
+     * Add an award to a group
+     *
+     * @param string $name
+     * @param array $awards
+     * @return static
+     */
+    public function setGroup(string $name, $awards = []): static
+    {
+        if (empty($this->groups[$name])) $this->groups[$name] = [];
+
+        foreach ($awards as $award) {
+            $this->groups[$name][$award] = $award;
+        }
+
+        return $this;
+    }
+ 
+    /**
+     * Run a filter over each of the items.
+     *
+     * @param string $groupName
+     * 
+     * @return static
+     */   
     public function group($groupName)
     {
         $groups = $this->groupBy('group');
@@ -62,12 +87,7 @@ class Awards extends Collection
         return $group ?: new static([]);
     }
 
-    /**
-     * Run a filter over each of the items.
-     *
-     * @param  (callable(TValue, TKey): bool)|null  $callback
-     * @return static
-     */
+
     public function award($award)
     {
         if (!empty($this->items[$award])) {
@@ -81,14 +101,12 @@ class Awards extends Collection
         return new static($this->only($this->items, []));
     }
 
-
     /**
-     * Run a filter over each of the items.
+     * Return the next unlockable tiers
      *
-     * @param  (callable(TValue, TKey): bool)|null  $callback
-     * @return static
+     * @return Collection
      */
-    public function nextUnlockableTiers()
+    public function nextUnlockableTiers(): Collection
     {
         $unlockableTiers = collect();
         foreach($this->items as $award) {
@@ -101,11 +119,13 @@ class Awards extends Collection
         return $unlockableTiers;
     }
 
-
+    /**
+     * @return void
+     */
     public function check()
     {
         foreach ($this->items as $award) {
-            $award->check($this->rewardable);
+            $award->check();
         }
     }
 }
