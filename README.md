@@ -8,7 +8,7 @@ An way of implementing achievement on Laravel.
 Execute this command on the Laravel root project folder:
 
 ```bash
-composer require edulazaro/larakeep
+composer require edulazaro/larawards
 ```
 
 Configure the database details on the `.env` file and execute the migrations using:
