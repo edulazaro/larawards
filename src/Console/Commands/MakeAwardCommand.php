@@ -35,7 +35,7 @@ class MakeAwardCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        $stub = '/../../../stubs/award.stub';
+        $stub = '/../../../Stubs/award.stub';
         return __DIR__ . $stub;
     }
 
