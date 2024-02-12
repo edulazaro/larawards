@@ -22,7 +22,7 @@ php artisan migrate
 To create a new award (achievement, trophy, badge...) use this command, replacing `FooAchievement` for the ward class name:
 
 ```php
-php artisan make award FooAchievement
+php artisan make:award FooAchievement
 ```
 
 This will create a new award on the `app/Awards/FooAchievement.php`.
