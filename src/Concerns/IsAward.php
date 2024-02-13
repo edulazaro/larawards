@@ -80,7 +80,7 @@ trait IsAward
 
      * @return string
      */
-    public function getEvent(): string
+    public function getEvent(): string|null
     {
         if (empty($this->event)) return null;
         return $this->event;
