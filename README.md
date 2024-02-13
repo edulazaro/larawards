@@ -62,7 +62,7 @@ protected array $tiers = [
 ];
 ```
 
-Each tier has a `title`, which is the achievement/badge name and also a `score`,` whcih is the score needed to reward the users with the achievement/badge.
+Each tier has a `title`, which is the achievement/badge name and also a `score`,` which is the score needed to reward the users with the achievement/badge.
 
 
 Finally, the `score` method is the place to code the logic which retrieves the current award score for the `awardablep` user:
@@ -113,7 +113,7 @@ User::awardableGroup('achievements', [
 
 Awards can be registed to any model which uses the `HasRewards` trait.
 
-## Checking awards
+## Checking rewards
 
 When you need to check an award, you can do this:
 
